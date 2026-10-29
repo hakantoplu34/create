@@ -1,0 +1,56 @@
+name: Mac uygulamasını derle
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  dmg:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Gömülü araçları indir (yt-dlp, ffmpeg)
+        run: |
+          set -euo pipefail
+          mkdir -p bin/arm64 bin/x64
+          # yt-dlp_macos tek dosya, hem Apple Silicon hem Intel'de çalışır.
+          curl -fsSL -o bin/arm64/yt-dlp https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos
+          cp bin/arm64/yt-dlp bin/x64/yt-dlp
+          # Statik ffmpeg, mimari başına.
+          curl -fsSL -o /tmp/ff-arm64.zip https://ffmpeg.martin-riedl.de/redirect/latest/macos/arm64/release/ffmpeg.zip
+          curl -fsSL -o /tmp/ff-x64.zip https://ffmpeg.martin-riedl.de/redirect/latest/macos/amd64/release/ffmpeg.zip
+          unzip -o -j /tmp/ff-arm64.zip ffmpeg -d bin/arm64
+          unzip -o -j /tmp/ff-x64.zip ffmpeg -d bin/x64
+          chmod +x bin/*/*
+          file bin/*/*
+          bin/arm64/ffmpeg -version | head -1
+          bin/arm64/yt-dlp --version
+
+      - run: npm install --no-audit --no-fund
+
+      - name: dmg üret (Apple Silicon ve Intel)
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: npm run dist:mac
+
+      - name: Sürüm sayfasına yükle
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: surum-${{ github.run_number }}
+          name: İlham ${{ github.run_number }}. yapı
+          body: |
+            **Apple Silicon (M1, M2, M3, M4):** Ilham-*-arm64.dmg
+            **Intel işlemcili Mac:** Ilham-*-x64.dmg
+
+            Kurulum: dmg'yi aç, İlham'ı Applications klasörüne sürükle. İlk açılışta sağ tık > Aç.
+          files: dist/*.dmg
+          make_latest: true

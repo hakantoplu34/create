@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' ilham: data:; media-src 'self' ilham:; style-src 'self'; script-src 'self'">
+  <title>İlham</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="side">
+    <div class="drag-strip"></div>
+    <div class="brand">ilham</div>
+
+    <nav class="nav" aria-label="Bölümler">
+      <button class="nav-btn" data-view="arsiv" aria-current="page">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v9H4zM13 4h7v5h-7zM13 11h7v9h-7zM4 15h7v5H4z"/></svg>Arşiv
+      </button>
+      <button class="nav-btn" data-view="tarayici">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.6 2.5 14.4 0 17M12 3.5c-2.5 2.6-2.5 14.4 0 17"/></svg>Tarayıcı
+      </button>
+      <button class="nav-btn" data-view="hesaplar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></svg>Hesaplar
+      </button>
+      <button class="nav-btn" data-view="ayarlar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg>Ayarlar
+      </button>
+    </nav>
+
+    <div class="boards-head">
+      <span>Panolar</span>
+      <button class="icon-btn" id="newBoardBtn" aria-label="Yeni pano">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+    </div>
+    <form id="newBoardForm" class="new-board" hidden>
+      <label class="sr" for="newBoardName">Pano adı</label>
+      <input id="newBoardName" maxlength="60" placeholder="Pano adı, ör. Burger kampanyası" autocomplete="off">
+    </form>
+    <ul id="boardList" class="board-list"></ul>
+    <p id="boardsEmpty" class="side-hint">İşleri panolara ayırmak için ilk panonu oluştur.</p>
+
+    <div class="drive-pill" id="drivePill"></div>
+  </aside>
+
+  <main class="main">
+    <!-- ARŞİV / PANO -->
+    <section id="view-arsiv" class="view">
+      <header class="bar">
+        <div class="bar-title">
+          <h1 id="gridTitle">Arşiv</h1>
+          <span id="gridCount" class="count"></span>
+        </div>
+        <div class="bar-tools">
+          <label class="sr" for="search">Arşivde ara</label>
+          <input id="search" type="search" placeholder="Başlık, not, etiket ya da platform ara" autocomplete="off">
+          <div class="seg" role="group" aria-label="Tür">
+            <button data-type="" aria-pressed="true">Tümü</button>
+            <button data-type="gorsel" aria-pressed="false">Görseller</button>
+            <button data-type="video" aria-pressed="false">Videolar</button>
+          </div>
+          <label class="sr" for="platformFilter">Platform</label>
+          <select id="platformFilter"><option value="">Tüm platformlar</option></select>
+          <button id="boardMenuBtn" class="ghost" hidden>Panoyu düzenle</button>
+        </div>
+      </header>
+      <div id="grid" class="grid" aria-live="polite"></div>
+      <div id="gridEmpty" class="empty" hidden></div>
+      <div id="dropCover" class="drop-cover" hidden><p>Bırak, arşive eklensin</p></div>
+    </section>
+
+    <!-- TARAYICI -->
+    <section id="view-tarayici" class="view" hidden>
+      <div class="tabs" id="tabs" role="tablist" aria-label="Açık sayfalar"></div>
+      <div class="addr">
+        <button class="icon-btn" id="backBtn" aria-label="Geri"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <button class="icon-btn" id="fwdBtn" aria-label="İleri"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+        <button class="icon-btn" id="reloadBtn" aria-label="Yenile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12a7 7 0 1 1-2.1-5M19 4v4h-4"/></svg></button>
+        <form id="addrForm" class="addr-form">
+          <label class="sr" for="addrInput">Adres</label>
+          <input id="addrInput" autocomplete="off" spellcheck="false">
+        </form>
+        <label class="sr" for="saveBoard">Kaydedilecek pano</label>
+        <select id="saveBoard" title="Kaydettiklerin bu panoya da eklenir"><option value="">Panoya ekleme</option></select>
+        <button class="primary" id="savePageBtn">Sayfayı kaydet</button>
+      </div>
+      <div id="webviews" class="webviews"></div>
+      <div id="browserEmpty" class="empty">
+        <h2>Bir hesap ya da kaynak aç</h2>
+        <p>Hesaplar bölümünden giriş yaptığın platformu aç. Gezerken görselin ya da videonun üstüne gel, köşede çıkan butonla arşive kaydet.</p>
+        <button class="primary" data-goto="hesaplar">Hesaplara git</button>
+      </div>
+    </section>
+
+    <!-- HESAPLAR -->
+    <section id="view-hesaplar" class="view page" hidden>
+      <header class="page-head">
+        <h1>Hesaplar</h1>
+        <p>Her platforma bir kez giriş yap; oturum bu bilgisayarda saklanır, şifren uygulamaya kaydedilmez. Kişisel hesabın yerine ajansın çalışma hesabını kullanman önerilir.</p>
+      </header>
+      <ul id="accountList" class="rows"></ul>
+      <h2 class="sub">Arşiv kaynakları</h2>
+      <p class="muted">Giriş gerektirmeyen ödül arşivleri ve reklam kütüphaneleri.</p>
+      <ul id="sourceList" class="rows"></ul>
+    </section>
+
+    <!-- AYARLAR -->
+    <section id="view-ayarlar" class="view page" hidden>
+      <header class="page-head"><h1>Ayarlar</h1></header>
+
+      <div class="block">
+        <h2>Google Drive</h2>
+        <p class="muted">Kaydedilen her iş Drive'daki "İlham Arşivi" klasörüne yüklenir ve oradan akışla açılır. Bağlantı için Google Cloud'da masaüstü uygulaması türünde bir OAuth istemcisi oluşturman gerekir; adımlar README dosyasında.</p>
+        <div id="driveState" class="state"></div>
+        <form id="driveForm" class="form">
+          <div class="field">
+            <label for="clientId">İstemci kimliği (Client ID)</label>
+            <input id="clientId" autocomplete="off" spellcheck="false" placeholder="xxxx.apps.googleusercontent.com">
+          </div>
+          <div class="field">
+            <label for="clientSecret">Gizli anahtar (Client secret)</label>
+            <input id="clientSecret" type="password" autocomplete="off" spellcheck="false">
+          </div>
+          <div class="row">
+            <button type="submit" class="ghost">Anahtarları kaydet</button>
+            <button type="button" class="primary" id="driveConnectBtn">Google Drive'ı bağla</button>
+            <button type="button" class="ghost" id="driveDisconnectBtn" hidden>Bağlantıyı kes</button>
+          </div>
+          <p class="field-msg" id="driveMsg" role="status"></p>
+        </form>
+      </div>
+
+      <div class="block">
+        <h2>Video araçları</h2>
+        <p class="muted">Videoları indirmek için yt-dlp, kapak karesi için ffmpeg kullanılır. Mac'te Terminal'e <code>brew install yt-dlp ffmpeg</code> yazman yeterli.</p>
+        <ul id="toolList" class="rows compact"></ul>
+      </div>
+
+      <div class="block">
+        <h2>Önbellek</h2>
+        <form id="cacheForm" class="form inline">
+          <div class="field">
+            <label for="cacheLimit">Son açılan videolar için ayrılacak yer (MB)</label>
+            <input id="cacheLimit" type="number" min="256" step="256">
+          </div>
+          <button type="submit" class="ghost">Kaydet</button>
+          <button type="button" class="ghost" id="openDataBtn">Veri klasörünü aç</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- DETAY -->
+  <div id="detail" class="detail" hidden>
+    <div class="detail-scrim" data-close></div>
+    <article class="detail-panel" role="dialog" aria-modal="true" aria-labelledby="dTitleLabel">
+      <div class="detail-media" id="dMedia"></div>
+      <div class="detail-side">
+        <div class="detail-top">
+          <span class="platform" id="dPlatform"></span>
+          <button class="icon-btn" data-close aria-label="Kapat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        </div>
+        <div class="field">
+          <label for="dTitle" id="dTitleLabel">Başlık</label>
+          <input id="dTitle" maxlength="200">
+        </div>
+        <div class="field">
+          <label for="dNote">Not</label>
+          <textarea id="dNote" rows="4" placeholder="Neden kaydettin? Fikir, içgörü, kullanılan teknik."></textarea>
+        </div>
+        <div class="field">
+          <label for="dTags">Etiketler</label>
+          <input id="dTags" placeholder="virgülle ayır: gıda, mizah, ambalaj">
+        </div>
+        <div class="field">
+          <span class="label">Panolar</span>
+          <div class="chips" id="dBoards"></div>
+          <label class="sr" for="dAddBoard">Panoya ekle</label>
+          <select id="dAddBoard"></select>
+        </div>
+        <dl class="meta" id="dMeta"></dl>
+        <div class="detail-actions">
+          <button class="ghost" id="dSource">Kaynağa git</button>
+          <button class="ghost" id="dRetry" hidden>Tekrar dene</button>
+          <button class="danger" id="dDelete">Arşivden sil</button>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>
