@@ -1,0 +1,38 @@
+2026-10-30 09:23:30.344 Ilham Helper[2043:8971] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.345 Ilham Helper[2043:8973] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.408 Ilham Helper[2043:8971] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.594 Ilham Helper[2043:8971] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.594 Ilham Helper[2043:8973] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.620 Ilham Helper[2043:8968] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.734 Ilham Helper[2043:8971] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.738 Ilham Helper[2043:8973] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.809 Ilham Helper[2043:8973] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.937 Ilham Helper[2043:8973] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.937 Ilham Helper[2043:8968] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.937 Ilham Helper[2043:8971] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.941 Ilham Helper[2043:8971] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.941 Ilham Helper[2043:8968] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.942 Ilham Helper[2043:8968] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.947 Ilham Helper[2043:8971] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.947 Ilham Helper[2043:8968] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.947 Ilham Helper[2043:8973] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.950 Ilham Helper[2043:8973] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.950 Ilham Helper[2043:8971] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.952 Ilham Helper[2043:8973] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.959 Ilham Helper[2043:8971] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.959 Ilham Helper[2043:8968] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.959 Ilham Helper[2043:8973] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.961 Ilham Helper[2043:8968] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.963 Ilham Helper[2043:8973] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.963 Ilham Helper[2043:8973] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.977 Ilham Helper[2043:8971] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.977 Ilham Helper[2043:8973] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.995 Ilham Helper[2043:8968] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.996 Ilham Helper[2043:8971] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.996 Ilham Helper[2043:8973] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+2026-10-30 09:23:30.997 Ilham Helper[2043:8973] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
+TEST SONUCU: 0
+TEST SAYFA: https://www.instagram.com/accounts/login/ {"width":1192,"height":801}
+TEST SONUCU: webview yüksekliği 801
+TEST SAYFA: https://www.instagram.com/accounts/login/ {"width":1192,"height":801}
+2026-10-30 09:23:48.980 Ilham Helper[2043:8968] XPC error for connection com.apple.backupd.sandbox.xpc: Connection invalid
