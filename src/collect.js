@@ -290,6 +290,8 @@ class Collector {
       try {
         const img = await wc.capturePage();
         fs.writeFileSync(path.join(opts.debugDir, `kesfet-${id}${suffix}.png`), img.toPNG());
+        const html = await wc.executeJavaScript('location.href + "\\n" + document.documentElement.outerHTML', true);
+        fs.writeFileSync(path.join(opts.debugDir, `kesfet-${id}${suffix}.html`), html.slice(0, 3e6));
       } catch { /* test görüntüsü şart değil */ }
     };
 
@@ -322,7 +324,12 @@ class Collector {
         return { status: state, items: [], message: this._message(state, p) };
       }
 
+      // Sayfalar sonuçları geç yükleyebilir: kartlar görünene kadar 12 sn'ye kadar yokla.
       await read();
+      for (let t = 0; !items.length && t < 8 && !job.cancelled; t++) {
+        await sleep(1500);
+        await read();
+      }
       if (!items.length && p.fallbackUrl) {
         await load(p.fallbackUrl(term));
         state = await check();
