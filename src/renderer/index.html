@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' ilham: data:; media-src 'self' ilham:; style-src 'self'; script-src 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' ilham: data: https:; media-src 'self' ilham:; style-src 'self'; script-src 'self'">
   <title>İlham</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -12,7 +12,10 @@
     <div class="brand">ilham</div>
 
     <nav class="nav" aria-label="Bölümler">
-      <button class="nav-btn" data-view="arsiv" aria-current="page">
+      <button class="nav-btn" data-view="kesfet" aria-current="page">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg>Keşfet
+      </button>
+      <button class="nav-btn" data-view="arsiv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v9H4zM13 4h7v5h-7zM13 11h7v9h-7zM4 15h7v5H4z"/></svg>Arşiv
       </button>
       <button class="nav-btn" data-view="tarayici">
@@ -43,8 +46,40 @@
   </aside>
 
   <main class="main">
+    <!-- KEŞFET -->
+    <section id="view-kesfet" class="view">
+      <header class="k-head">
+        <form id="kForm" class="k-form" role="search">
+          <label class="sr" for="kInput">Aranacak kelime</label>
+          <input id="kInput" autocomplete="off" spellcheck="false" placeholder="Ne arıyorsun? zeytinyağı ambalaj, burger reklam, olive oil">
+          <button type="submit" class="primary" id="kGo">Ara</button>
+          <button type="button" class="ghost" id="kStop" hidden>Durdur</button>
+        </form>
+        <div class="k-platforms" id="kPlatforms" role="group" aria-label="Aranacak platformlar"></div>
+        <p class="k-hint">Birden fazla kelimeyi virgülle ayır: <b>zeytin, olive</b>. Behance ve Ads of the World'de İngilizce kelime daha çok sonuç getirir.</p>
+      </header>
+      <div class="k-bar" id="kBar" hidden>
+        <div class="k-status" id="kStatus" aria-live="polite"></div>
+        <div class="k-tools">
+          <label class="sr" for="kSort">Sıralama</label>
+          <select id="kSort">
+            <option value="karisik">Karışık</option>
+            <option value="izlenme">En çok izlenen</option>
+            <option value="platform">Platforma göre</option>
+          </select>
+          <label class="sr" for="kBoard">Kaydederken panoya ekle</label>
+          <select id="kBoard"><option value="">Panoya ekleme</option></select>
+        </div>
+      </div>
+      <div id="kGrid" class="grid" hidden></div>
+      <div id="kEmpty" class="empty">
+        <h2>Tek aramayla her yerde ara</h2>
+        <p>Yazdığın kelime giriş yaptığın platformlarda aynı anda aranır, sonuçlar burada toplanır. Beğendiğinin üstüne gelip kaydet.</p>
+      </div>
+    </section>
+
     <!-- ARŞİV / PANO -->
-    <section id="view-arsiv" class="view">
+    <section id="view-arsiv" class="view" hidden>
       <header class="bar">
         <div class="bar-title">
           <h1 id="gridTitle">Arşiv</h1>
@@ -189,5 +224,6 @@
 
   <div id="toast" class="toast" role="status" hidden></div>
   <script src="app.js"></script>
+  <script src="kesfet.js"></script>
 </body>
 </html>

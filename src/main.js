@@ -5,6 +5,7 @@ const { Store } = require('./store');
 const { Drive } = require('./drive');
 const { Media, prepareBundledBins } = require('./media');
 const { ACCOUNTS, SOURCES, platformOf, partitionFor } = require('./platforms');
+const { Collector, PLATFORMS } = require('./collect');
 
 // Gömülü tarayıcı sitelere "Electron" olarak görünmesin; standart Chrome kimliği.
 const CHROME_UA = `Mozilla/5.0 (${process.platform === 'darwin' ? 'Macintosh; Intel Mac OS X 10_15_7' : 'Windows NT 10.0; Win64; x64'}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${process.versions.chrome} Safari/537.36`;
@@ -18,6 +19,7 @@ let win;
 let store;
 let drive;
 let media;
+let collector;
 
 function send(channel, data) {
   if (win && !win.isDestroyed()) win.webContents.send(channel, data);
@@ -160,6 +162,17 @@ function setupIpc() {
     if (/^https?:\/\//.test(url)) shell.openExternal(url);
   });
   ipcMain.handle('open:dataFolder', () => shell.openPath(store.dir));
+
+  // Keşfet
+  ipcMain.handle('discover:platforms', () => Object.entries(PLATFORMS).map(([id, p]) => ({ id, name: p.name, login: p.login, partition: p.partition })));
+  ipcMain.handle('discover:search', (_e, searchId, terms, platforms) => {
+    const clean = [...new Set((terms || []).map((t) => String(t).trim()).filter(Boolean))].slice(0, 3);
+    if (!clean.length) return false;
+    collector.search(clean, platforms || [], (platform, update) => send('discover:progress', { searchId, platform, ...update }))
+      .then(() => send('discover:progress', { searchId, done: true }));
+    return true;
+  });
+  ipcMain.handle('discover:cancel', () => collector.cancel());
 }
 
 function createWindow() {
@@ -243,6 +256,7 @@ app.whenReady().then(() => {
   store = new Store(path.join(app.getPath('userData'), 'arsiv'));
   drive = new Drive(store);
   media = new Media(store, drive, (item) => send('item:changed', item));
+  collector = new Collector(store, CHROME_UA);
   registerProtocol();
   setupIpc();
 
@@ -251,9 +265,23 @@ app.whenReady().then(() => {
       { role: 'appMenu' }, { role: 'editMenu' }, { role: 'viewMenu' }, { role: 'windowMenu' },
     ]));
   }
+  if (process.env.ILHAM_COLLECT_TEST) return collectTest(process.env.ILHAM_COLLECT_TEST, process.env.ILHAM_TEST_DIR || '.');
   createWindow();
   app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
 });
+
+// Test: her platformda gerçek arama yapar, sonucu yazar, kapanır (CI için).
+async function collectTest(term, dir) {
+  fs.mkdirSync(dir, { recursive: true });
+  const summary = {};
+  await collector.search([term], Object.keys(PLATFORMS), (platform, u) => {
+    if (u.status === 'araniyor') return;
+    summary[platform] = { status: u.status, count: u.count, message: u.message || '', ornek: (u.items || []).slice(0, 3) };
+    console.log(`KESFET ${platform}: ${u.status} ${u.count}${u.message ? ' / ' + u.message : ''}`);
+  }, { debugDir: dir });
+  fs.writeFileSync(path.join(dir, 'kesfet.json'), JSON.stringify(summary, null, 2));
+  app.exit(0);
+}
 
 app.on('before-quit', () => store?.flush());
 app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });

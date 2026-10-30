@@ -237,3 +237,37 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--f
 .toast button { background: transparent; border: 0; color: var(--turuncu); font-weight: 700; cursor: pointer; padding: 0; }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* ---------- Keşfet ---------- */
+.k-head { padding: var(--s6) var(--s6) var(--s3); -webkit-app-region: drag; }
+.k-head > * { -webkit-app-region: no-drag; }
+.k-form { display: flex; gap: var(--s2); max-width: 860px; }
+.k-form input { flex: 1; height: 48px; font-size: 16px; padding: 0 var(--s4); border-radius: var(--r-md); }
+.k-form .primary, .k-form .ghost { height: 48px; padding: 0 var(--s5); border-radius: var(--r-md); }
+.k-platforms { display: flex; flex-wrap: wrap; gap: 6px; margin-top: var(--s3); }
+.k-plat {
+  display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 var(--s3);
+  border-radius: 16px; border: 1px solid var(--cizgi); background: var(--beyaz); cursor: pointer; color: var(--gri);
+}
+.k-plat[aria-pressed="true"] { background: var(--fume); border-color: var(--fume); color: #fff; }
+.k-plat .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gri-acik); }
+.k-plat .dot.ok { background: #3FAE6A; }
+.k-hint { margin: var(--s2) 0 0; font-size: 12.5px; color: var(--gri); }
+.k-bar { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; padding: 0 var(--s6) var(--s3); }
+.k-status { display: flex; flex-wrap: wrap; gap: 6px var(--s3); font-size: 12.5px; color: var(--gri); }
+.k-st { display: inline-flex; align-items: center; gap: 6px; }
+.k-st b { color: var(--fume); font-weight: 600; }
+.k-st .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gri-acik); }
+.k-st.busy .dot { background: var(--turuncu); animation: kpulse 1s infinite alternate; }
+.k-st.ok .dot { background: #3FAE6A; }
+.k-st.bad .dot { background: var(--hata); }
+.k-st button { border: 0; background: none; padding: 0; color: var(--turuncu); font-weight: 600; cursor: pointer; font-size: 12.5px; }
+@keyframes kpulse { to { opacity: .3; } }
+.k-tools { display: flex; gap: var(--s2); }
+.card .k-acts { position: absolute; top: var(--s2); right: var(--s2); display: flex; gap: 6px; opacity: 0; transition: opacity .15s; }
+.card:hover .k-acts, .card:focus-within .k-acts { opacity: 1; }
+.card .k-acts button { min-height: 32px; padding: 0 var(--s3); font-size: 12.5px; }
+.card .k-saved { position: absolute; top: var(--s2); right: var(--s2); background: #2F8F55; color: #fff; font-size: 11.5px; font-weight: 600; padding: 3px 8px; border-radius: 4px; }
+.card .k-views { position: absolute; bottom: var(--s2); left: var(--s2); background: rgba(43,46,51,.82); color: #fff; font-size: 11.5px; font-weight: 600; padding: 3px 7px; border-radius: 4px; }
+.card:hover .k-views { opacity: 0; }
+.card img.broken { visibility: hidden; }

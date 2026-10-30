@@ -72,7 +72,7 @@ function toast(msg, undo) {
 function show(view, boardId = null) {
   state.view = view;
   if (view === 'arsiv') state.boardId = boardId;
-  for (const v of ['arsiv', 'tarayici', 'hesaplar', 'ayarlar']) $(`#view-${v}`).hidden = v !== view;
+  for (const v of ['kesfet', 'arsiv', 'tarayici', 'hesaplar', 'ayarlar']) $(`#view-${v}`).hidden = v !== view;
   for (const b of $$('.nav-btn')) {
     if (b.dataset.view === view && !(view === 'arsiv' && state.boardId)) b.setAttribute('aria-current', 'page');
     else b.removeAttribute('aria-current');
@@ -82,6 +82,7 @@ function show(view, boardId = null) {
   if (view === 'hesaplar') refreshAccounts();
   if (view === 'ayarlar') renderSettings();
   if (view === 'tarayici') renderTabs();
+  if (view === 'kesfet') renderKesfet();
 }
 
 /* ---------------- Panolar (kenar çubuğu) ---------------- */
@@ -667,6 +668,7 @@ $$('[data-goto]').forEach((b) => b.addEventListener('click', () => show(b.datase
 async function refreshAccounts() {
   state.accountStatus = await api.accountStatus();
   renderAccounts();
+  if (typeof kRenderPlatforms === 'function') kRenderPlatforms();
 }
 
 function renderAccounts() {
@@ -771,7 +773,8 @@ $('#openDataBtn').addEventListener('click', () => api.openDataFolder());
 /* ---------------- Başlangıç ---------------- */
 $$('.nav-btn').forEach((b) => b.addEventListener('click', () => show(b.dataset.view)));
 
-(async function start() {
+// Tüm betikler (kesfet.js dahil) yüklendikten sonra başla.
+window.addEventListener('DOMContentLoaded', async function start() {
   const d = await api.init();
   for (const it of d.items) state.items.set(it.id, it);
   state.boards = d.boards;
@@ -783,5 +786,6 @@ $$('.nav-btn').forEach((b) => b.addEventListener('click', () => show(b.dataset.v
   state.settings = d.settings;
   renderDrivePill();
   renderPlatformFilter();
-  show('arsiv');
-})();
+  await kInit();
+  show('kesfet');
+});

@@ -64,6 +64,14 @@ jobs:
           grep -E "TEST|Error|error" testler/cikti.txt | tail -20
           test "$code" -eq 0 && test -s testler/5-instagram-yuklendi.png
 
+      # Her platformda gerçek arama (girişsiz). Sonuç sayısı ve sayfa görüntüleri test dalına gider.
+      - name: Keşfet testi
+        continue-on-error: true
+        run: |
+          ILHAM_DATA="$RUNNER_TEMP/ilham-kesfet" ILHAM_COLLECT_TEST="burger" ILHAM_TEST_DIR="$PWD/testler" \
+            perl -e 'alarm 240; exec @ARGV' /Applications/Ilham.app/Contents/MacOS/Ilham > testler/kesfet-cikti.txt 2>&1
+          grep -E "KESFET|Error" testler/kesfet-cikti.txt
+
       - name: Test görüntülerini sakla
         if: always()
         uses: actions/upload-artifact@v4

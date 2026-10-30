@@ -30,4 +30,9 @@ contextBridge.exposeInMainWorld('ilham', {
   openDataFolder: call('open:dataFolder'),
 
   onItemChanged: (fn) => ipcRenderer.on('item:changed', (_e, item) => fn(item)),
+
+  discoverPlatforms: call('discover:platforms'),
+  discover: call('discover:search'),
+  cancelDiscover: call('discover:cancel'),
+  onDiscover: (fn) => ipcRenderer.on('discover:progress', (_e, u) => fn(u)),
 });
