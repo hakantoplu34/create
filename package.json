@@ -1,6 +1,6 @@
 {
   "name": "ilham",
-  "productName": "İlham",
+  "productName": "Ilham",
   "version": "0.1.0",
   "description": "Kısayol reklam ilham arşivi: hesaplara giriş, arşive kaydet, Google Drive depolama, masonry arşiv ve panolar.",
   "main": "src/main.js",
@@ -17,23 +17,51 @@
   },
   "build": {
     "appId": "co.kisayol.ilham",
-    "productName": "İlham",
+    "productName": "Ilham",
     "artifactName": "Ilham-${version}-${arch}.${ext}",
-    "files": ["src/**/*", "package.json"],
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
     "mac": {
       "category": "public.app-category.productivity",
-      "target": ["dmg"],
+      "target": [
+        "dmg"
+      ],
       "identity": "-",
       "hardenedRuntime": false,
-      "extraResources": [{ "from": "bin/${arch}", "to": "bin", "filter": ["**/*"] }]
+      "extraResources": [
+        {
+          "from": "bin/${arch}",
+          "to": "bin",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ],
+      "extendInfo": {
+        "CFBundleDisplayName": "İlham"
+      }
     },
     "dmg": {
-      "title": "İlham",
+      "title": "Ilham",
       "contents": [
-        { "x": 140, "y": 180 },
-        { "x": 400, "y": 180, "type": "link", "path": "/Applications" }
+        {
+          "x": 140,
+          "y": 180
+        },
+        {
+          "x": 400,
+          "y": 180,
+          "type": "link",
+          "path": "/Applications"
+        }
       ]
     },
-    "win": { "target": ["nsis"] }
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    }
   }
 }

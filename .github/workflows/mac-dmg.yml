@@ -51,6 +51,6 @@ jobs:
             **Apple Silicon (M1, M2, M3, M4):** Ilham-*-arm64.dmg
             **Intel işlemcili Mac:** Ilham-*-x64.dmg
 
-            Kurulum: dmg'yi aç, İlham'ı Applications klasörüne sürükle. İlk açılışta sağ tık > Aç.
+            Kurulum: dmg'yi aç, İlham'ı Applications klasörüne sürükle. İlk açılışta: Sistem Ayarları > Gizlilik ve Güvenlik > Yine de Aç (ya da Terminal: xattr -cr /Applications/Ilham.app).
           files: dist/*.dmg
           make_latest: true

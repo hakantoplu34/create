@@ -17,7 +17,7 @@ Her `main` güncellemesinde GitHub, Mac sunucusunda dmg'yi derleyip deponun **Re
 1. Deponun Releases sayfasından en son sürümü aç.
 2. Apple Silicon (M1–M4) için `Ilham-…-arm64.dmg`, Intel Mac için `Ilham-…-x64.dmg` indir.
 3. dmg'yi aç, İlham'ı Applications klasörüne sürükle.
-4. İlk açılışta Applications'ta İlham'a sağ tıkla > **Aç** > **Aç**. Sonraki açılışlarda normal çift tık yeter.
+4. İlk açılışta macOS "Açılmadı" uyarısı verir (Apple onaylı imza yok). **Bitti** de, **Sistem Ayarları > Gizlilik ve Güvenlik** sayfasının altında **Yine de Aç**'a bas, şifreni gir. Ya da Terminal'de: `xattr -cr /Applications/Ilham.app`. Sonraki açılışlarda normal çift tık yeter.
 
 yt-dlp ve ffmpeg uygulamanın içinde gelir, ayrıca kurman gerekmez.
 
@@ -77,7 +77,7 @@ src/
   renderer/           Arayüz (HTML, CSS, JS — çerçevesiz)
 ```
 
-Veri klasörü: Mac'te `~/Library/Application Support/İlham/arsiv`. Ayarlar > Veri klasörünü aç ile açılır.
+Veri klasörü: Mac'te `~/Library/Application Support/Ilham/arsiv`. Ayarlar > Veri klasörünü aç ile açılır.
 
 ## Sonraki faz
 
