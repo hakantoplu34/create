@@ -42,6 +42,33 @@ jobs:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
         run: npm run dist:mac
 
+      # dmg'yi bir kullanıcı gibi kur, aç, ekran görüntüsü al. Çökerse sürüm yayınlanmaz.
+      - name: Açılış testi (Apple Silicon)
+        run: |
+          set -uo pipefail
+          hdiutil attach dist/Ilham-*-arm64.dmg -mountpoint /tmp/ilham-dmg -nobrowse
+          cp -R /tmp/ilham-dmg/Ilham.app /Applications/
+          hdiutil detach /tmp/ilham-dmg
+          xattr -cr /Applications/Ilham.app
+          mkdir -p testler
+          /Applications/Ilham.app/Contents/Resources/bin/ffmpeg -version | head -1
+          /Applications/Ilham.app/Contents/Resources/bin/yt-dlp --version
+          ILHAM_DATA="$RUNNER_TEMP/ilham-veri" \
+          ILHAM_SHOT="$PWD/testler/1-arsiv.png,$PWD/testler/2-hesaplar.png,$PWD/testler/3-ayarlar.png" \
+          ILHAM_SHOT_JS="0||document.querySelector('[data-view=hesaplar]').click()||document.querySelector('[data-view=ayarlar]').click()" \
+            perl -e 'alarm 120; exec @ARGV' /Applications/Ilham.app/Contents/MacOS/Ilham > testler/cikti.txt 2>&1
+          code=$?
+          echo "Çıkış kodu: $code"
+          tail -40 testler/cikti.txt
+          test "$code" -eq 0 && test -s testler/3-ayarlar.png
+
+      - name: Test görüntülerini sakla
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: acilis-testi
+          path: testler/
+
       - name: Sürüm sayfasına yükle
         uses: softprops/action-gh-release@v2
         with:
