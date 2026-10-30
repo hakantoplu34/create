@@ -74,6 +74,7 @@ jobs:
       - name: Test görüntülerini depoya koy
         if: always() && github.event_name != 'pull_request'
         run: |
+          [ -n "$(ls -A testler 2>/dev/null)" ] || exit 0
           cd testler
           git init -q -b test-goruntuleri
           git add -A

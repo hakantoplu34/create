@@ -79,6 +79,10 @@ src/
 
 Veri klasörü: Mac'te `~/Library/Application Support/Ilham/arsiv`. Ayarlar > Veri klasörünü aç ile açılır.
 
+## Geliştirme süreci
+
+Sonraki fazlar `docs/minimax/` altındaki görev dosyalarıyla geliştiriliyor. Başlangıç: `docs/minimax/BASLANGIC-PROMPTU.md`. Her derlemede açılış testinin ekran görüntüleri `test-goruntuleri` dalına konur.
+
 ## Sonraki faz
 
 1. Python işleme katmanı: sahne kareleri, konuşma metni (Whisper), CLIP ile benzer görsel arama.
