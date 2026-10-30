@@ -134,7 +134,7 @@ async function kSave(r, card, btn) {
   const boardId = $('#kBoard').value || '';
   try {
     const res = await api.save({
-      kind: r.kind, src: r.kind === 'video' ? '' : r.src, poster: r.kind === 'video' ? (r.src || r.poster) : '',
+      kind: r.kind, src: r.kind === 'video' ? '' : (r.platform === 'pinterest' ? r.src.replace('/474x/', '/736x/') : r.src), poster: r.kind === 'video' ? (r.src || r.poster) : '',
       pageUrl: r.pageUrl, title: r.title, width: r.width, height: r.height, partition: r.partition, boardId,
     });
     kesfet.saved.set(r.id, res.item.id);

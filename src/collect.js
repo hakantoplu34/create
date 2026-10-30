@@ -16,6 +16,8 @@ const PLATFORMS = {
     name: 'Pinterest', partition: partitionFor('pinterest'), login: false,
     url: (q) => `https://www.pinterest.com/search/pins/?q=${enc(q)}&rs=typed`,
     pattern: '^/pin/\\d+', kind: 'gorsel', scrolls: 3, ratio: 1.5,
+    // Girişsiz Pinterest kartları bağlantısız gösterir; o zaman doğrudan görselleri al.
+    imageFallback: '[data-test-id="gated-pin-rep"] img, [data-test-id="pin"] img, [data-grid-item] img[src*="pinimg.com"]',
   },
   instagram: {
     name: 'Instagram', partition: partitionFor('instagram'), login: true,
@@ -27,6 +29,7 @@ const PLATFORMS = {
     name: 'TikTok', partition: partitionFor('tiktok'), login: true,
     url: (q) => `https://www.tiktok.com/search/video?q=${enc(q)}`,
     pattern: '^/@[\\w.-]+/(video|photo)/\\d+', kind: 'video', scrolls: 2, ratio: 1.33,
+    loginSelector: '[data-e2e="top-login-button"]',
   },
   youtube: {
     name: 'YouTube', partition: partitionFor('youtube'), login: false,
@@ -40,7 +43,7 @@ const PLATFORMS = {
   },
   adsoftheworld: {
     name: 'Ads of the World', partition: 'persist:genel', login: false,
-    url: (q) => `https://www.adsoftheworld.com/search?q=${enc(q)}`,
+    url: (q) => `https://www.adsoftheworld.com/campaigns?search=${enc(q)}`,
     pattern: '^/campaigns/[\\w-]+', kind: 'gorsel', scrolls: 1, ratio: 0.75,
   },
 };
@@ -92,6 +95,27 @@ function genericExtractor(pattern, platform) {
         height: (img && img.naturalHeight) || Math.round(r.height) || 0,
         viewsText: viewsEl ? viewsEl.textContent.trim() : '',
       });
+    }
+    return out;
+  })()`;
+}
+
+// Bağlantısız kartlar için: seçiciye uyan büyük görseller.
+function imageExtractor(selector, platform) {
+  return `(() => {
+    const out = [];
+    const seen = new Set();
+    for (const img of document.querySelectorAll(${JSON.stringify(selector)})) {
+      const r = img.getBoundingClientRect();
+      if (r.width < 100) continue;
+      let src = img.currentSrc || img.src || '';
+      const set = img.getAttribute('srcset') || '';
+      const m = set.match(/(https:[^\\s,]+\\/474x\\/[^\\s,]+)/);
+      if (m) src = m[1];
+      if (!src || seen.has(src)) continue;
+      seen.add(src);
+      out.push({ platform: ${JSON.stringify(platform)}, pageUrl: src, path: '', src, title: (img.alt && img.alt !== 'Pin') ? img.alt : '',
+        width: img.naturalWidth || Math.round(r.width), height: img.naturalHeight || Math.round(r.height), viewsText: '' });
     }
     return out;
   })()`;
@@ -232,7 +256,7 @@ class Collector {
     let kind = it.kind || p.kind;
     if (kind === 'auto') kind = /\/reel\//.test(it.path || it.pageUrl) ? 'video' : 'gorsel';
     let src = it.src;
-    if (it.platform === 'pinterest') src = src.replace(/\/(?:\d+x|\d+x\d+)\//, '/736x/');
+    if (it.platform === 'pinterest') src = src.replace(/\/(?:\d+x|\d+x\d+|originals)\//, '/474x/').replace(/\.png$/, '.jpg');
     const views = parseCount(it.viewsText);
     return {
       id: it.platform + ':' + it.pageUrl,
@@ -299,7 +323,8 @@ class Collector {
       await load(p.url(term));
       let items = [];
       const read = async () => {
-        const got = await wc.executeJavaScript(p.custom === 'youtube' ? YOUTUBE_EXTRACTOR : genericExtractor(p.pattern, id), true);
+        let got = await wc.executeJavaScript(p.custom === 'youtube' ? YOUTUBE_EXTRACTOR : genericExtractor(p.pattern, id), true);
+        if (!(got || []).length && p.imageFallback) got = await wc.executeJavaScript(imageExtractor(p.imageFallback, id), true);
         const map = new Map(items.map((x) => [x.pageUrl, x]));
         for (const x of got || []) if (!map.has(x.pageUrl)) map.set(x.pageUrl, x);
         items = [...map.values()];
@@ -350,7 +375,8 @@ class Collector {
         const s = await check();
         if (typeof s === 'string') return { status: s, items: [], message: this._message(s, p) };
         if (BLOCK_PATTERNS.test(s.text)) return { status: 'dogrulama', items: [], message: this._message('dogrulama', p) };
-        if (p.login && s.password) return { status: 'giris', items: [], message: this._message('giris', p) };
+        const loginBtn = p.loginSelector ? await wc.executeJavaScript(`!!document.querySelector(${JSON.stringify(p.loginSelector)})`, true).catch(() => false) : false;
+        if (p.login && (s.password || loginBtn)) return { status: 'giris', items: [], message: this._message('giris', p) };
         return { status: 'bos', items: [], message: `${p.name} bu arama için sonuç göstermedi.` };
       }
       return { status: 'tamam', items };
