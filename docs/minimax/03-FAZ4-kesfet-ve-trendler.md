@@ -2,6 +2,8 @@
 
 Önce `00-GENEL.md`'yi oku. Faz 2 bitmiş olmalı (Faz 3 şart değil).
 
+> **Durum (30 Ekim 2026):** Keşfet ekranının temeli yapıldı: `src/collect.js` (görünmez pencerelerde arama ve okuma), `src/renderer/kesfet.js` (ekran), CI'da `ILHAM_COLLECT_TEST` ile her platformda gerçek arama testi (sonuç ve sayfa HTML'leri `test-goruntuleri` dalında). Girişsiz testte YouTube, Behance, Pinterest ve Ads of the World sonuç veriyor; Instagram ve TikTok giriş istiyor. Bu fazda kalanlar: son aramaların saklanması (1. bölüm sonu), YouTube Data API, Meta Reklam Kütüphanesi ve TikTok Creative Center toplayıcıları (2. bölüm), takip listeleri ve Trendler (3. bölüm), `metrics` alanı (4. bölüm), `collector-test` komutu. Mevcut toplayıcı yapısını (PLATFORMS tablosu) bozmadan genişlet.
+
 ## Amaç
 
 Kullanıcı bir keyword yazar ("zeytin", "burger reels"), uygulama giriş yapılmış hesaplarla ve resmi API'lerle platformlarda arar, sonuçları tek bir masonry ızgarada gösterir. Kullanıcı beğendiklerini arşive kaydeder. Dijital işler izlenme ve yükselme hızına göre sıralanır.
