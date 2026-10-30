@@ -209,7 +209,8 @@ function createWindow() {
         await new Promise((r) => setTimeout(r, 1500));
         if (steps[i]) {
           try {
-            await win.webContents.executeJavaScript(steps[i]);
+            const r = await win.webContents.executeJavaScript(steps[i]);
+            if (r !== undefined && r !== null && typeof r !== 'object') console.log('TEST SONUCU:', r);
           } catch (e) {
             console.error('TEST HATASI:', e.message);
             if (process.env.ILHAM_SHOT_STRICT) { app.exit(3); return; }
@@ -218,6 +219,16 @@ function createWindow() {
         await new Promise((r) => setTimeout(r, 900));
         const img = await win.webContents.capturePage();
         fs.writeFileSync(shots[i], img.toPNG());
+        // Gömülü sayfanın kendi görüntüsü (ana pencere görüntüsüne her zaman girmiyor).
+        const guests = require('electron').webContents.getAllWebContents().filter((w) => w.getType() === 'webview' && !w.isDestroyed());
+        const guest = guests[guests.length - 1];
+        if (guest) {
+          try {
+            const g = await guest.capturePage();
+            fs.writeFileSync(shots[i].replace(/\.png$/, '-sayfa.png'), g.toPNG());
+            console.log('TEST SAYFA:', guest.getURL(), JSON.stringify(g.getSize()));
+          } catch (e) { console.error('Sayfa görüntüsü alınamadı:', e.message); }
+        }
       }
       app.quit();
     });

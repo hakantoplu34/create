@@ -57,11 +57,11 @@ jobs:
           ILHAM_DATA="$RUNNER_TEMP/ilham-veri" \
           ILHAM_SHOT_STRICT=1 \
           ILHAM_SHOT="$PWD/testler/1-arsiv.png,$PWD/testler/2-hesaplar.png,$PWD/testler/3-ayarlar.png,$PWD/testler/4-instagram.png,$PWD/testler/5-instagram-yuklendi.png" \
-          ILHAM_SHOT_JS="0||document.querySelector('[data-view=hesaplar]').click()||document.querySelector('[data-view=ayarlar]').click()||openTab('https://www.instagram.com/accounts/login/','persist:instagram','Instagram')||new Promise(r=>setTimeout(r,5000)).then(()=>document.querySelector('webview:not(.off)').executeJavaScript('innerHeight')).then(h=>{console.log('webview yüksekliği',h); if(h<600) throw new Error('webview yüksekliği '+h+' px, en az 600 olmalı');})" \
+          ILHAM_SHOT_JS="0||document.querySelector('[data-view=hesaplar]').click()||document.querySelector('[data-view=ayarlar]').click()||openTab('https://www.instagram.com/accounts/login/','persist:instagram','Instagram')||new Promise(r=>setTimeout(r,5000)).then(()=>document.querySelector('webview:not(.off)').executeJavaScript('innerHeight')).then(h=>{if(h<600) throw new Error('webview yüksekliği '+h+' px, en az 600 olmalı'); return 'webview yüksekliği '+h;})" \
             perl -e 'alarm 150; exec @ARGV' /Applications/Ilham.app/Contents/MacOS/Ilham > testler/cikti.txt 2>&1
           code=$?
           echo "Çıkış kodu: $code"
-          tail -40 testler/cikti.txt
+          grep -E "TEST|Error|error" testler/cikti.txt | tail -20
           test "$code" -eq 0 && test -s testler/5-instagram-yuklendi.png
 
       - name: Test görüntülerini sakla
