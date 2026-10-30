@@ -172,7 +172,9 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--f
 .addr-form { flex: 1; }
 .addr-form input { width: 100%; background: var(--zemin); border-color: transparent; }
 .webviews { flex: 1; position: relative; background: var(--beyaz); }
-.webviews webview { position: absolute; inset: 0; }
+.webviews { min-height: 0; }
+/* webview içindeki çerçeve varsayılan 150px kalmasın: kutu sütun yönlü flex olmalı. */
+.webviews webview { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; }
 .webviews webview.off { visibility: hidden; }
 
 /* ---------- Sayfalar ---------- */

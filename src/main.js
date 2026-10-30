@@ -207,7 +207,14 @@ function createWindow() {
       const shots = process.env.ILHAM_SHOT.split(',');
       for (let i = 0; i < shots.length; i++) {
         await new Promise((r) => setTimeout(r, 1500));
-        if (steps[i]) await win.webContents.executeJavaScript(steps[i]).catch((e) => console.error(e));
+        if (steps[i]) {
+          try {
+            await win.webContents.executeJavaScript(steps[i]);
+          } catch (e) {
+            console.error('TEST HATASI:', e.message);
+            if (process.env.ILHAM_SHOT_STRICT) { app.exit(3); return; }
+          }
+        }
         await new Promise((r) => setTimeout(r, 900));
         const img = await win.webContents.capturePage();
         fs.writeFileSync(shots[i], img.toPNG());

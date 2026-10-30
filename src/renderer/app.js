@@ -607,6 +607,11 @@ function openTab(url, partition, title = '') {
       wv.send('ilham-saved', { message: 'Kaydedilemedi: ' + err.message });
     }
   });
+  // Kapsayıcı görünür değilken eklenen webview yanlış boyutta açılıyor; önce görünür yap.
+  show('tarayici');
+  $('#browserEmpty').hidden = true;
+  $('.addr').hidden = false;
+  $('#webviews').hidden = false;
   $('#webviews').append(wv);
   state.tabs.push(tab);
   activateTab(id);
